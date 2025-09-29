@@ -1,0 +1,63 @@
+//2870. 수학 숙제
+
+#include <iostream>
+#include <algorithm>
+#include <string>
+#include <vector>
+using namespace std;
+
+bool compare(string s1, string s2) {
+	if (s1.length() != s2.length()) {
+		return s1.length() < s2.length();
+	}
+	else {
+		return s1 < s2;
+	}
+}
+
+string To_Integer(string s) {
+	int i = 0;
+	while (i < (int)s.size() && s[i] == '0') i++;
+	string result = s.substr(i);
+	if (result.empty()) {
+		return "0";
+	}
+	else {
+		return result;
+	}
+}
+
+int main(void) {
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+
+	vector<string> result;
+	int n;
+	cin >> n;
+	while (n--) {
+		string s;
+		cin >> s;
+
+		string num;
+		for (char c : s) {
+			if (isdigit(c)) {
+				num += c;
+			}
+			else {
+				if (!num.empty()) {
+					result.push_back(To_Integer(num));
+					num.clear();
+				}
+			}
+		}
+		if (!num.empty()) {
+			result.push_back(To_Integer(num));
+		}
+	}
+	sort(result.begin(), result.end(), compare);
+
+	for (string x : result) {
+		cout << x << "\n";
+	}
+	return 0;
+}
