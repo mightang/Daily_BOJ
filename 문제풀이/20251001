@@ -1,0 +1,43 @@
+#1380. 귀걸이
+https://www.acmicpc.net/problem/1380
+
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+
+int main(void) {
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+
+	int n;
+	int scenario = 1;
+	while (1) {
+		cin >> n;
+		cin.ignore();
+		if (n == 0) break;
+
+		string name[102];
+		for (int i = 1; i <= n; i++) {
+			getline(cin, name[i]);
+		}
+		
+		int is_returned[102];
+		fill(is_returned, is_returned + n + 1, 0);
+		for (int i = 0; i < (2 * n) - 1; i++) {
+			int num;
+			char c;
+			cin >> num >> c;
+			is_returned[num]++;
+		}
+
+		for (int i = 1; i <= n; i++) {
+			if (is_returned[i] == 1) {
+				cout << scenario << " " << name[i] << "\n";
+				break;
+			}
+		}
+		scenario++;
+	}
+	return 0;
+}
