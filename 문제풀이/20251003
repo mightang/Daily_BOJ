@@ -1,0 +1,50 @@
+2025.10.03.
+#1068. 트리
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+#include <stack>
+using namespace std;
+
+int n, x;
+vector<int> adj[52];
+bool is_deleted[52];
+
+int main(void) {
+	cin.tie(0);
+	ios::sync_with_stdio(false);
+
+	cin >> n;
+	for (int node = 0; node < n; node++) {
+		int u;
+		cin >> u;
+		if (u == -1) continue;
+		adj[u].push_back(node);
+	}
+	cin >> x;
+
+	stack<int> s;
+	s.push(x);
+	is_deleted[x] = 1;
+	while (!s.empty()) {
+		int cur = s.top();
+		s.pop();
+		for (int nxt : adj[cur]) {
+			is_deleted[nxt] = 1;
+			s.push(nxt);
+		}
+	}
+
+	int result = 0;
+	for (int i = 0; i < n; i++) {
+		if (is_deleted[i]) continue;
+		int leaf = 0;
+		for (int x : adj[i]) {
+			if (!is_deleted[x]) leaf++;
+		}
+		if (leaf == 0) result++;
+	}
+	cout << result;
+	return 0;
+}
