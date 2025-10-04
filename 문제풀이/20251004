@@ -1,0 +1,50 @@
+2025.10.04.
+#24479
+
+#include <iostream>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+int n, m, r;
+vector<int> adj[100002]; // 인접 리스트 (1 ~ n)
+bool vis[100002];        // 방문 여부
+int result[100002];      // 각 정점의 방문 순서(0이면 미방문)
+int idx = 1;             // 방문 순서 카운터 (1부터 시작)
+
+// 깊이 우선 탐색(DFS): p에서 시작
+void DFS(int p) {
+    vis[p] = true;          // 방문 체크
+    result[p] = idx++;      // 방문 순서 기록
+    // 문제 요구: 정점 번호가 작은 것부터 방문 → 오름차순 정렬 후 순회
+    for (int nxt : adj[p]) {
+        if (vis[nxt]) continue; // 이미 방문했으면 스킵
+        DFS(nxt);
+    }
+}
+
+int main(void) {
+    cin.tie(0);
+    ios::sync_with_stdio(false);
+
+    cin >> n >> m >> r;          // 정점 수, 간선 수, 시작 정점
+    while (m--) {
+        int u, v;
+        cin >> u >> v;
+        // 무방향 그래프이므로 양방향으로 간선 추가
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    // 각 정점의 인접 정점들을 오름차순 정렬
+    for (int i = 1; i <= n; i++) {
+        sort(adj[i].begin(), adj[i].end());
+    }
+
+    DFS(r); // r에서 DFS 시작
+
+    // 1 ~ n까지 방문 순서를 출력 (미방문은 0)
+    for (int i = 1; i <= n; i++) {
+        cout << result[i] << "\n";
+    }
+    return 0;
+}
