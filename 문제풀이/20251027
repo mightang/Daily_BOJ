@@ -1,0 +1,62 @@
+https://www.acmicpc.net/problem/2630
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int n;              // 전체 색종이의 한 변 길이
+int b = 0, w = 0;   // 파란색(b), 흰색(w) 색종이 개수 카운트
+bool p[130][130];   // 색종이 정보 (0: 흰색, 1: 파란색)
+
+// (y, x)를 시작점으로 하는 len × len 정사각형 구역을 재귀적으로 검사하는 함수
+void Func(int y, int x, int len) {
+    bool init = p[y][x]; // 기준색 (왼쪽 위 칸의 색)
+    bool isdiff = 0;     // 다른 색이 섞여 있는지 여부
+
+    // 현재 구역 내에 서로 다른 색이 존재하는지 확인
+    for (int i = y; i < y + len; i++) {
+        for (int j = x; j < x + len; j++) {
+            if (p[i][j] != init) { // 기준색과 다른 색 발견 시
+                isdiff = 1;
+                break;              // 안쪽 루프만 탈출
+            }
+        }
+        if (isdiff) break;          // 바깥 루프도 탈출
+    }
+
+    // 색이 섞여 있다면 4등분하여 재귀 호출
+    if (isdiff) {
+        int half = len / 2;
+        Func(y, x, half);                 // 1사분면 (왼쪽 위)
+        Func(y, x + half, half);          // 2사분면 (오른쪽 위)
+        Func(y + half, x, half);          // 3사분면 (왼쪽 아래)
+        Func(y + half, x + half, half);   // 4사분면 (오른쪽 아래)
+    }
+    // 모두 같은 색이면 해당 색종이 1개로 간주
+    else {
+        if (init) b++;    // 파란색이면 b++
+        else w++;         // 흰색이면 w++
+    }
+}
+
+int main() {
+    cin.tie(0);
+    ios::sync_with_stdio(0);
+
+    cin >> n;
+
+    // 색종이 정보 입력 받기
+    // p[i][j] = 0(흰색) 또는 1(파란색)
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            cin >> p[i][j];
+        }
+    }
+
+    // 전체 영역(0,0)에서 n×n 크기로 탐색 시작
+    Func(0, 0, n);
+
+    // 흰색, 파란색 색종이 개수 출력
+    cout << w << "\n" << b;
+    return 0;
+}
